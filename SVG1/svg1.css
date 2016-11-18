@@ -1,0 +1,21 @@
+/* continent color */
+.continent
+{
+
+}
+
+/* country colors */
+path.es
+{
+  fill: #E60026;
+}
+
+path.it
+{
+  fill: 	#0099FF;
+}
+
+path.se
+{
+  fill: #fecc00;
+}
