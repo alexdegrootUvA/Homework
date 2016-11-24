@@ -1,0 +1,47 @@
+/*  Alexander de Groot
+    10078797
+*/
+
+.header {
+  font-family: Helvetica, sans-serif;
+}
+
+* {
+  font-family: "fira-sans-2", helvetica, sans-serif !important;
+  color: #333;
+}
+
+body {
+  background-color: #f1f3f3
+}
+
+.axis {
+  font: 12px helvetica;
+}
+
+.bar {
+  fill: #2b8cbe;
+}
+
+.bar:hover {
+  fill: #045a8d;
+}
+
+.axis--x path {
+  display: none;
+}
+
+.toolTip {
+  position: absolute;
+  font: helvetica;
+  font-weight: bold;
+  color: #ffffff;
+  display: none;
+  min-width: auto;
+  height: auto;
+  background: none repeat scroll 0 0 #74a9cf;
+  border: 1px solid #74a9cf;
+  border-radius: 25px;
+  padding: 14px;
+  text-align: center;
+}
