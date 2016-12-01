@@ -17,10 +17,8 @@ var tooltip = d3.select("body").append("div")
 var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
     y = d3.scaleLinear().rangeRound([height, 0]);
 
-
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
 d3.json("data.json", function(error,data) {
   if (error) throw error;
@@ -32,7 +30,6 @@ d3.json("data.json", function(error,data) {
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
-
 
   g.append("g")
       .attr("class", "axis axis--y")
@@ -76,6 +73,5 @@ d3.json("data.json", function(error,data) {
       .style("font-weight", "bold")
       .style("font", "Helvetica")
       .text("Neerslag in mm per maand in De Bilt (2015)");
-
 
 });
