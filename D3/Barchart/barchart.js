@@ -1,12 +1,11 @@
 /*  Alexander de Groot
     10078797
-
     Data Processing
     Bar chart in D3 following Mike Bostock's tutorials
 */
 // speelveld klaarmaken
 var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 40},
+    margin = {top: 200, right: 20, bottom: 30, left: 40},
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom;
 
@@ -67,7 +66,7 @@ d3.json("data.json", function(error,data) {
 // titel toevoegen aan bar chart
   g.append("text")
       .attr("x", (width / 2))
-      .attr("y", 30 - (margin.top / 2))
+      .attr("y", 30 - (margin.top ))
       .attr("text-anchor", "middle")
       .style("font-size", "25px")
       .style("font-weight", "bold")
