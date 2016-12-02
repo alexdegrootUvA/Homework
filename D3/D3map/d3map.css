@@ -1,0 +1,31 @@
+/*  Alexander de Groot
+    10078797
+*/
+
+.header {
+  font-family: Helvetica, sans-serif;
+}
+
+ h1{
+   position: relative;
+   left: 150px;
+   
+}
+
+* {
+  font-family: "fira-sans-2", helvetica, sans-serif !important;
+  color: #333;
+}
+
+.hoverinfo {
+  
+  font-family: helvetica !important;
+  min-width: auto;
+  height: auto;
+  background: none repeat scroll 0 0 #74a9cf;
+  border: 1px solid #74a9cf;
+  border-radius: 25px;
+  padding: 14px;
+  text-align: left;
+}
+

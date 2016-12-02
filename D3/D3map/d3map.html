@@ -1,0 +1,182 @@
+<!--Alexander de Groot     10078797     Data Processing     D3 Datamaps opdracht     Countries by Population Density-->
+    
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Countries by Population Density</title>
+    <link rel="stylesheet" type="text/css" href="d3map.css"/>
+</head>
+<body>
+<meta charset="utf-8">
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="/datamaps.world.min.js"></script>
+<h1>Countries by Population Density (2015)</h1>
+<div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+<script>
+    // render wereldkaart
+    new Datamap({
+        element: document.getElementById('container'),
+        projection: 'mercator', 
+        // 9 verschillende fillKeys 
+        fills: {
+            HIGH9: '#49006a',
+            HIGH8: '#7a0177',
+            HIGH7: '#ae017e',
+            MEDIUM6: '#dd3497',
+            MEDIUM5: '#f768a1',
+            MEDIUM4: '#fa9fb5',
+            LOW3: '#fcc5c0',
+            LOW2: '#fde0dd',
+            LOW1: '#fff7f3',
+            defaultFill: '#F5F5F5'
+        },
+        data: { IRL:{fillKey: 'MEDIUM4',density: 68},
+                USA:{fillKey: 'LOW3',density: 33},
+                NLD:{fillKey: 'HIGH8',density:441},
+                EST:{fillKey: 'LOW3',density: 29},
+                CAN:{fillKey: 'LOW1',density: 3},
+                AUS:{fillKey: 'LOW1',density: 3},
+                FIN:{fillKey: 'LOW2',density:   16},
+                SWE:{fillKey: 'LOW2',density:22},
+                LVA:{fillKey: 'LOW3',density:31},
+                NZL:{fillKey: 'LOW2',density:18},
+                RUS:{fillKey: 'LOW1',density:8},
+                PRY:{fillKey: 'LOW2',density:16},
+                BRA:{fillKey: 'LOW3',density:25},
+                PAN:{fillKey: 'LOW3',density:46},
+                BWA:{fillKey: 'LOW1',density:3},
+                ARG:{fillKey: 'LOW2', density:14},
+                BOL:{fillKey: 'LOW1', density:9},
+                GUY:{fillKey: 'LOW1', density:4},
+                NAM:{fillKey: 'LOW1', density:3},
+                PNG:{fillKey: 'LOW2', density:16},
+                RMM:{fillKey: 'LOW2', density:12},
+                ECU:{fillKey: 'MEDIUM4', density:64},
+                COL:{fillKey: 'LOW3', density:43},
+                MDG:{fillKey: 'LOW3', density:35},
+                MMR:{fillKey: 'MEDIUM5', density:80},
+                TCD:{fillKey: 'LOW1', density:9},
+                SDN:{fillKey: 'LOW2', density:17},
+                GIN:{fillKey: 'LOW3', density:44},
+                NIC:{fillKey: 'MEDIUM4', density:50},
+                PER:{fillKey: 'LOW2', density:24},
+                GAB:{fillKey: 'LOW1', density:6},
+                LAO:{fillKey: 'LOW3', density:28},
+                LBR:{fillKey: 'LOW3', density:43},
+                IDN:{fillKey: 'MEDIUM6', density:137},
+                SEN:{fillKey: 'MEDIUM4', density:69},
+                CMR:{fillKey: 'LOW3', density:44},
+                CIV:{fillKey: 'MEDIUM4', density:72},
+                AGO:{fillKey: 'LOW2', density:17},
+                COG:{fillKey: 'LOW3', density:36},
+                MNG:{fillKey: 'LOW1', density:2},
+                BGD:{fillKey: 'HIGH9',density:1121},
+                TWN:{fillKey: 'HIGH8', density:650},
+                RWA:{fillKey: 'HIGH8', density:469},
+                HTI:{fillKey: 'HIGH8', density:409},
+                PHL:{fillKey: 'HIGH8', density:344},
+                LKA:{fillKey: 'HIGH8', density:323},
+                DOM:{fillKey: 'HIGH7', density:220},
+                NER:{fillKey: 'LOW2', density:14},
+                UGA:{fillKey: 'HIGH7', density:153},
+                HUN:{fillKey: 'MEDIUM6', density:106},
+                ETH:{fillKey: 'MEDIUM5', density:96},
+                MYS:{fillKey: 'MEDIUM5', density:95},
+                KHM:{fillKey: 'MEDIUM5', density:86},
+                ROU:{fillKey: 'MEDIUM5', density:83},
+                KEN:{fillKey: 'MEDIUM5', density:81},
+                UKR:{fillKey: 'MEDIUM4', density:74},
+                BUL:{fillKey: 'MEDIUM4', density:64},
+                IRN:{fillKey: 'LOW3', density:48},
+                ZWE:{fillKey: 'LOW3', density:33},
+                VEN:{fillKey: 'LOW3', density:32},
+                CHL:{fillKey: 'LOW2', density:22},
+                DZA:{fillKey: 'LOW2', density:16},
+                SOM:{fillKey: 'LOW2', density:15},
+                KAZ:{fillKey: 'LOW1', density:6},
+                ARE:{fillKey: 'MEDIUM6', density:118},
+                QAT:{fillKey: 'HIGH7', density:175},
+                BHR:{fillKey: 'HIGH9', density:1945},
+                MON:{fillKey: 'HIGH9', density:19000},
+                DNK:{fillKey: 'MEDIUM6', density:141},
+                BEL:{fillKey: 'LOW3', density:46},
+                CZE:{fillKey: 'MEDIUM6', density:146},
+                NOR:{fillKey: 'LOW2', density:16},
+                ESP:{fillKey: 'MEDIUM5', density:92},
+                GRC:{fillKey: 'MEDIUM5', density:82},
+                AUT:{fillKey: 'MEDIUM6', density:102},
+                SAU:{fillKey: 'LOW2', density:14},
+                DEU:{fillKey: 'HIGH7', density:230},
+                CHE:{fillKey: 'HIGH7', density:203},
+                FRA:{fillKey: 'MEDIUM6', density:118},
+                ITA:{fillKey: 'HIGH7', density:201},
+                GBR:{fillKey: 'HIGH7', density:268},
+                KOR:{fillKey: 'HIGH8', density:507},
+                ISR:{fillKey: 'HIGH8', density:390},
+                JPN:{fillKey: 'HIGH8', density:336},
+                PRT:{fillKey: 'MEDIUM6', density:112},
+                POL:{fillKey: 'MEDIUM6', density:106},
+                NPL:{fillKey: 'HIGH7', density: 180},
+                MEX:{fillKey: 'MEDIUM4', density:64},
+                TUR:{fillKey: 'MEDIUM6', density:100},
+                THA:{fillKey: 'MEDIUM6', density:126},
+                ZAF:{fillKey: 'LOW3', density:43},
+                CHN:{fillKey: 'MEDIUM6', density:143},
+                JOR:{fillKey: 'MEDIUM6', density:109},
+                SLV:{fillKey: 'MEDIUM6', density:102},
+                JAM:{fillKey: 'HIGH7', density:248},
+                ALB:{fillKey: 'HIGH6', density:101},
+                TUN:{fillKey: 'MEDIUM4', density:66},
+                AZE:{fillKey: 'MEDIUM6', density:113},
+                CUB:{fillKey: 'MEDIUM6', density:102},
+                GEO:{fillKey: 'LOW3', density:43},
+                ARM:{fillKey: 'MEDIUM6', density:101},
+                GHA:{fillKey: 'MEDIUM6', density:116},
+                EGY:{fillKey: 'MEDIUM5', density:92},
+                SYR:{fillKey: 'MEDIUM6', density:100},
+                VNM:{fillKey: 'HIGH7', density:280},
+                IRQ:{fillKey: 'MEDIUM5', density:85},
+                MAR:{fillKey: 'MEDIUM5', density:77},
+                IND:{fillKey: 'HIGH8', density:398},
+                PAK:{fillKey: 'HIGH7', density:242},
+                AFG:{fillKey: 'LOW2', density:39},
+                SGP:{fillKey: 'HIGH9', density:7797},
+                HGK:{fillKey: 'HIGH9', density:6644},
+        },
+        
+        geographyConfig: {
+            borderColor: '#DEDEDE',
+            highlightBorderWidth: 2,
+            // don't change color on mouse hover
+            highlightFillColor: function(geo) {
+                return geo['fillColor'] || '#F5F5F5';
+            },
+            // border kleur aanpassen bij mouse over
+            highlightBorderColor: '#B7B7B7',
+            // tooltip aanroepen met land en density
+            popupTemplate: function(geo, data) {
+                // controleer of aangewezen land in de data bevindt
+                if (!data) { return ; }
+                // html voor de tooltip
+                return ['<div class="hoverinfo">',
+                    '<strong>', geo.properties.name, '</strong>',
+                    '<br>Density: <strong>', data.density, '</strong>',
+                    '</div>'].join('');
+            }
+        }
+       
+    });
+
+</script>
+<br>
+<br>
+<div id="description" style="width: 1000px; height: 300px; font-size: larger; font-family: Helvetica;">
+    <h3>Interactivity:</h3><br> I have tried to keep my interactivity simple but very functional. I have chosen for a tooltip to
+    pop up when hoovering the map. The textbox that pops up shows both the name of the country the cursor is currently on and the 
+    density. In addition, the country shades to a light gray, so it is clear for the user which country he/she is hoovering.
+    Furthermore, the stroke of the country becomes slightly thicker and changes color. I have chosen this effect to ensure the user
+    knows which country he/she is hoovering on. <br> Lastly, not all countries are included in my map. If the user hoovers over a 
+    country that is not in the data, no tooltip shows up. </div>
+</body>
+</html>
