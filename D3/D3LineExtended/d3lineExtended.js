@@ -88,7 +88,7 @@ function redraw() {
      	    return (key !== "indicatorName" && key !== "yearCode" && key !== "indicatorCode" && key !== "year");
      	});
     
-    // haalt per land de waardeistics uit de data en mapt ze naar een key
+    // haalt per land de statistics uit de data en mapt ze naar een key
     var transpose = keyring.map(function(name) {
             return {
               name: name,
