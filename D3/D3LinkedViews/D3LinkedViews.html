@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Quality of Life and the G7</title>
+    <link rel="stylesheet" type="text/css" href="d3LinkedViews.css"/>
+  </head>
+<body>
+<script type="text/javascript" src="https://d3js.org/d3.v3.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+<script src="/datamaps.world.min.js"></script>
+<script src="/jquery-3.1.1.min.js"></script>
+
+	<div id="container" style="position: absolute; top: 70px; margin: auto; width: 1000px; height: 600px;"></div>
+	<div id="map-tekst">Lukt niet om Datamaps kaart te linken aan de rest van mijn G7 visualisaties :(</div>
+	<div id="pieChart"></div>
+	<div id="barChart"></div>  
+	<div id="lineChart"></div>
+
+<h2>Quality of Life Index per Country 2016 Mid Year </h2>
+<script>
+    // render wereldkaart
+    var QoL = new Datamap({
+        element: document.getElementById('container'),
+        projection: 'mercator', 
+        // 6 verschillende fillKeys 
+        fills: {
+            ">170": '#41ab5d', // // 170++
+            "140 - 170": '#addd8e',	// 140 - 170
+            "110 - 139": '#feb24c', // 110 - 140
+            "80 - 109": '#f16913', //80-110
+            "50 - 79": '#e31a1c', // 50-80
+            "0 - 49": '#800026', // 0-50
+            defaultFill: '#F5F5F5'
+        },
+        data: { IRL:{fillKey: '>170',qol: 170.83},
+                USA:{fillKey: '>170',qol: 181.81},
+                NLD:{fillKey: '>170',qol:186.46},
+                EST:{fillKey: '>170',qol: 171.71},
+                CAN:{fillKey: '>170',qol: 172.83},
+                AUS:{fillKey: '>170',qol: 196.40},
+                FIN:{fillKey: '>170',qol: 183.98},
+                SWE:{fillKey: '>170',qol: 177.93},
+                NZL:{fillKey: '>170',qol: 196.09},
+                RUS:{fillKey: '80 - 109',qol: 86.53},
+                BRA:{fillKey: '80 - 109',qol: 94.75},
+                ARG:{fillKey: '110 - 139', qol: 137.33},
+                COL:{fillKey: '110 - 139', qol:118.49},
+                IDN:{fillKey: '50 - 79', qol:66.39},
+                TWN:{fillKey: '140 - 170', qol:150.62},
+                PHL:{fillKey: '50 - 79', qol:60.04	},
+                HUN:{fillKey: '110 - 139', qol:140.04},
+                MYS:{fillKey: '50 - 79', qol:57.40},
+                UKR:{fillKey: '80 - 109', qol:84.07},
+                BUL:{fillKey: '80 - 109', qol:139.74},
+                IRN:{fillKey: '80 - 109', qol:96.99},
+                CHL:{fillKey: '110 - 139', qol:140.67},
+                ARE:{fillKey: '140 - 170', qol:141.51},
+                QAT:{fillKey: '110 - 139', qol:135.57},
+                DNK:{fillKey: '>170', qol:201.53},
+                BEL:{fillKey: '140 - 170', qol:162.57},
+                CZE:{fillKey: '140 - 170', qol:167.77},
+                NOR:{fillKey: '>170', qol:176.23},
+                ESP:{fillKey: '>170', qol:184.69},
+                AUT:{fillKey: '>170', qol:187},
+                DEU:{fillKey: '>170', qol:189.87},
+                CHE:{fillKey: '>170', qol:196.44},
+                FRA:{fillKey: '>170', qol:172.30},
+                ITA:{fillKey: '140 - 170', qol:160.21},
+                GBR:{fillKey: '>170', qol:177.73},
+                KOR:{fillKey: '140 - 170', qol:167.52},
+                ISR:{fillKey: '140 - 170', qol:160.72},
+                JPN:{fillKey: '>170', qol:172.72},
+                PRT:{fillKey: '>170', qol:180.66},
+                POL:{fillKey: '140 - 170', qol:150.13},
+                MEX:{fillKey: '110 - 139', qol:142.85},
+                TUR:{fillKey: '110 - 139', qol:129.65},
+                THA:{fillKey: '0 - 49', qol:49.48},
+                ZAF:{fillKey: '140 - 170', qol:148.93},
+                CHN:{fillKey: '80 - 109', qol:94.59},
+                JOR:{fillKey: '110 - 139', qol:120.5},
+                EGY:{fillKey: '80 - 109', qol:88.35},
+                VNM:{fillKey: '0 - 49', qol:31.48},
+                IND:{fillKey: '80 - 109', qol:106.28},
+                PAK:{fillKey: '80 - 109', qol:92.28},
+                SGP:{fillKey: '80 - 109', qol:88.86},
+                HGK:{fillKey: '80 - 109', qol:104.02},
+                BIH:{fillKey: '140 - 170', qol:142.52},
+        },
+        
+        geographyConfig: {
+            borderColor: '#DEDEDE',
+            highlightBorderWidth: 2,
+            // kleur verandert naar lichtgrijs bij mouse hover
+            highlightFillColor: function(geo) {
+                return geo['fillColor'] || '#f0f0f0';
+            },
+            // border kleur aanpassen bij mouse over
+            highlightBorderColor: '#B7B7B7',
+            // tooltip aanroepen met land en qol
+            popupTemplate: function(geo, data) {
+                // controleer of aangewezen land in de data bevindt
+                if (!data) { return ; }
+                // html voor de tooltip
+                return ['<div class="hoverinfo">',
+                    '<strong>', geo.properties.name, '</strong>',
+                    '<br>Quality of Life: <strong>', data.qol, '</strong>',
+                    '</div>'].join('');
+            }
+        },
+  
+done: function(datamap) {
+    datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
+        console.log(d3.event.pageY)
+        var tekst = $("#map-tekst");      
+        tekst.css({
+            position:"absolute", 
+            top: d3.event.pageY, 
+            left: d3.event.pageX,
+        });
+    console.log(geography.properties.name);
+    });
+}
+
+
+});
+// plugin voegt legenda toe aan map
+QoL.legend();
+
+</script>
+<div id="description" style="position: absolute; top: 695px; width: 1000px; height: 100px; font-size: small; font-family: Helvetica;">
+    <h2>Taking a Closer Look at the G7 Better Life Index</h2> My intention was to first make an interactive map of the world displaying data
+    on the Quality of Life and then you would be able to click on one of the G7 countries (for simplicity) and a more detailed country specific visualization
+    would show up. Unfortunately, the interaction between the datamaps canvas and my other graphs is not working (yet)</div>
+<script>
+
+var 	formatAsPercentage = d3.format("%"),
+		formatAsPercentage1Dec = d3.format(".1%"),
+		formatAsInteger = d3.format(","),
+		fsec = d3.time.format("%S s"),
+		fmin = d3.time.format("%M m"),
+		fhou = d3.time.format("%H h"),
+		fwee = d3.time.format("%a"),
+		fdat = d3.time.format("%d d"),
+		fmon = d3.time.format("%b")
+		;
+/*
+Pie chart
+*/
+function dsPieChart(){
+
+	var dataset = [
+			{category: "Japan", measure: 0.176},
+	      {category: "GB", measure: 0.072},
+	      {category: "USA", measure: 0.462},
+	      {category: "France", measure: 0.077},
+	      {category: "Italy", measure: 0.059},
+	      {category: "Germany", measure:0.10},
+	      {category: "Canada", measure: 0.054}
+	      ]
+	      ;
+
+	var 	width = 400,
+		   height = 400,
+		   outerRadius = Math.min(width, height) / 2,
+		   innerRadius = outerRadius * .999,   
+		   // arc onderdelen kunnen bewegen
+		   innerRadiusFinal = outerRadius * .5,
+		   innerRadiusFinal3 = outerRadius* .45,
+		   color = d3.scale.category20c()    //d3 kleuren pallet gebruiken
+		   ;
+	    
+	var vis = d3.select("#pieChart")
+	     .append("svg:svg")              //svg maken in body
+	     .data([dataset])                   // link data eraan
+	         .attr("width", width)           
+	         .attr("height", height)
+	     		.append("svg:g")                
+	         .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")    //midden van chart wordt radius
+				;
+				
+   var arc = d3.svg.arc()              
+        	.outerRadius(outerRadius).innerRadius(innerRadius);
+   
+  //zorgt dat arcs bewegen
+   var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
+	var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
+
+   var pie = d3.layout.pie()           
+        .value(function(d) { return d.measure; });    //gebruik data array
+
+   var arcs = vis.selectAll("g.slice")     
+        .data(pie)                          
+        .enter()                           
+            .append("svg:g")                
+               .attr("class", "slice")    
+               .on("mouseover", mouseover)
+    				.on("mouseout", mouseout)
+    				.on("click", up)
+    				;
+    				
+        arcs.append("svg:path")
+               .attr("fill", function(d, i) { return color(i); } ) // stel kleur van arcs is door color functie
+               .attr("d", arc)     // hier worden de slices gemaakt
+					.append("svg:title") // laat de waardes zi
+				   .text(function(d) { return d.data.category + ": " + formatAsPercentage(d.data.measure); });			
+
+        d3.selectAll("g.slice").selectAll("path").transition()
+			    .duration(750)
+			    .delay(10)
+			    .attr("d", arcFinal )
+			    ;
+	
+	  /// label toevoegen en draaien
+	  // source: http://bl.ocks.org/1305337#index.html
+	  arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
+	  		.append("svg:text")
+	      .attr("dy", ".35em")
+	      .attr("text-anchor", "middle")
+	      .attr("transform", function(d) { return "translate(" + arcFinal.centroid(d) + ")rotate(" + angle(d) + ")"; })
+	      
+	      .text(function(d) { return d.data.category; })
+	      ;
+	   
+	  
+		function angle(d) {
+		    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
+		    return a > 90 ? a - 180 : a;
+		}
+		    
+		
+		// title voor pie chart			
+		vis.append("svg:text")
+	     	.attr("dy", ".35em")
+	      .attr("text-anchor", "middle")
+	      .text("GDP among G7")
+	      .attr("class","title")
+	      ;		    
+	function mouseover() {
+	  d3.select(this).select("path").transition()
+	      .duration(750)
+	        		
+	        		.attr("d", arcFinal3)
+	        		;
+	}
+	
+	function mouseout() {
+	  d3.select(this).select("path").transition()
+	      .duration(750)
+	        	
+	        		.attr("d", arcFinal)
+	        		;
+	}
+	
+	function up(d, i) {
+	
+				updateBarChart(d.data.category, color(i));
+				updateLineChart(d.data.category, color(i));
+			 
+	}
+}
+
+dsPieChart();
+
+/*
+Bar chart
+-------------------------------------------
+*/
+var datasetBarChart = [
+{ group: "All", category: "Climate Index", measure: 0 }, 
+{ group: "All", category: "Purchasing Power", measure: 0 }, 
+{ group: "All", category: "Safety Index", measure:0 }, 
+{ group: "All", category: "Health Index", measure: 0 }, 
+{ group: "All", category: "CoL Index", measure: 0 }, 
+{ group: "Japan", category: "CoL Index", measure: 81.29 }, 
+{ group: "Japan", category: "Purchasing Power", measure: 107.31}, 
+{ group: "Japan", category: "Safety Index", measure: 80.02 }, 
+{ group: "Japan", category: "Health Index", measure: 80.19 }, 
+{ group: "Japan", category: "CoL Index", measure: 93.03 }, 
+{ group: "GB", category: "Climate Index", measure: 78.72 }, 
+{ group: "GB", category: "Purchasing Power", measure: 109.78}, 
+{ group: "GB", category: "Safety Index", measure: 57.63}, 
+{ group: "GB", category: "Health Index", measure: 74.30}, 
+{ group: "GB", category: "CoL Index", measure: 72.73 }, 
+{ group: "USA", category: "Climate Index", measure: 67.40}, 
+{ group: "USA", category: "Purchasing Power", measure: 130.17}, 
+{ group: "USA", category: "Safety Index", measure: 51.32}, 
+{ group: "USA", category: "Health Index", measure: 68.18}, 
+{ group: "USA", category: "CoL Index", measure: 73.21 }, 
+{ group: "France", category: "Climate Index", measure: 82.34}, 
+{ group: "France", category: "Purchasing Power", measure: 105.38}, 
+{ group: "France", category: "Safety Index", measure: 56.61}, 
+{ group: "France", category: "Health Index", measure: 80.60}, 
+{ group: "France", category: "CoL Index", measure: 76.89}, 
+{ group: "Italy", category: "Climate Index", measure: 86.70}, 
+{ group: "Italy", category: "Purchasing Power", measure: 102.59}, 
+{ group: "Italy", category: "Safety Index", measure: 55.03}, 
+{ group: "Italy", category: "Health Index", measure: 66.56}, 
+{ group: "Italy", category: "CoL Index", measure: 69.65}, 
+{ group: "Germany", category: "Climate Index", measure: 52.01}, 
+{ group: "Germany", category: "Purchasing Power", measure: 136.14}, 
+{ group: "Germany", category: "Safety Index", measure: 67.30}, 
+{ group: "Germany", category: "Health Index", measure: 76.02}, 
+{ group: "Germany", category: "CoL Index", measure: 66.79 }, 
+{ group: "Canada", category: "Climate Index", measure: 51.16}, 
+{ group: "Canada", category: "Purchasing Power", measure: 118.08}, 
+{ group: "Canada", category: "Safety Index", measure: 60.47}, 
+{ group: "Canada", category: "Health Index", measure: 68.67}, 
+{ group: "Canada", category: "CoL Index", measure: 69.09}, 
+]
+;
+
+// stel eerste bar chart in 'default' op 0 
+var group = "All";
+
+function datasetBarChosen(group) {
+	var ds = [];
+	for (x in datasetBarChart) {
+		 if(datasetBarChart[x].group==group){
+		 	ds.push(datasetBarChart[x]);
+		 } 
+		}
+	return ds;
+}
+
+
+function dsBarChartBasics() {
+
+		var margin = {top: 100, right: 5, bottom: 20, left: 50},
+		width = 500 - margin.left - margin.right,
+	   height = 250 - margin.top - margin.bottom,
+		colorBar = d3.scale.category20(),
+		barPadding = 1
+		;
+		
+		return {
+			margin : margin, 
+			width : width, 
+			height : height, 
+			colorBar : colorBar, 
+			barPadding : barPadding
+		}			
+		;
+}
+
+function dsBarChart() {
+
+	var firstDatasetBarChart = datasetBarChosen(group);         	
+	
+	var basics = dsBarChartBasics();
+	
+	var margin = basics.margin,
+		width = basics.width,
+	   height = basics.height,
+		colorBar = basics.colorBar,
+		barPadding = basics.barPadding
+		;
+					
+	var 	xScale = d3.scale.linear()
+						.domain([0, firstDatasetBarChart.length])
+						.range([0, width])
+						;
+						
+// linear y scale: past zich op de data aan  
+	var yScale = d3.scale.linear()
+			// max waarde in dataset om de y scale te bepalen
+		   .domain([0, d3.max(firstDatasetBarChart, function(d) { return d.measure; })])
+		  
+		   .range([height, 0])
+		   ;
+	
+//svg element maken
+	
+	var svg = d3.select("#barChart")
+			.append("svg")
+		    .attr("width", width + margin.left + margin.right)
+		    .attr("height", height + margin.top + margin.bottom)
+		    .attr("id","barChartPlot")
+		    ;
+	
+	var plot = svg
+		    .append("g")
+		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		    ;
+	            
+	plot.selectAll("rect")
+		   .data(firstDatasetBarChart)
+		   .enter()
+		   .append("rect")
+			.attr("x", function(d, i) {
+			    return xScale(i);
+			})
+		   .attr("width", width / firstDatasetBarChart.length - barPadding)   
+			.attr("y", function(d) {
+			    return yScale(d.measure);
+			})  
+			.attr("height", function(d) {
+			    return height-yScale(d.measure);
+			})
+			.attr("fill", "lightgrey")
+			;
+	
+		
+// voeg labels toe onder de bars	
+	
+	plot.selectAll("text")
+	.data(firstDatasetBarChart)
+	.enter()
+	.append("text")
+	.text(function(d) {
+			return formatAsInteger(d3.round(d.measure));
+	})
+	.attr("text-anchor", "middle")
+	// zet ze in het midden
+	.attr("x", function(d, i) {
+			return (i * (width / firstDatasetBarChart.length)) + ((width / firstDatasetBarChart.length - barPadding) / 2);
+	})
+	.attr("y", function(d) {
+			return yScale(d.measure) + 14;
+	})
+	.attr("class", "yAxis")
+	;
+	
+		
+	
+	var xLabels = svg
+		    .append("g")
+		    .attr("transform", "translate(" + margin.left + "," + (margin.top + height)  + ")")
+		    ;
+	
+	xLabels.selectAll("text.xAxis")
+		  .data(firstDatasetBarChart)
+		  .enter()
+		  .append("text")
+		  .text(function(d) { return d.category;})
+		  .attr("text-anchor", "middle")
+			// weer in het midden
+						   .attr("x", function(d, i) {
+						   		return (i * (width / firstDatasetBarChart.length)) + ((width / firstDatasetBarChart.length - barPadding) / 2);
+						   })
+		  .attr("y", 15)
+		  .attr("class", "xAxis")
+		  
+		  ;			
+	 
+	// Title
+	svg.append("text")
+		.attr("x", (width + margin.left + margin.right)/2)
+		.attr("y", 15)
+		.attr("class","title")				
+		.attr("text-anchor", "middle")
+		.text("Overall Quality of Life Index (2016)")
+		;
+}
+
+dsBarChart();
+
+ /* ** UPDATE CHART ** */
+
+function updateBarChart(group, colorChosen) {
+	
+		var currentDatasetBarChart = datasetBarChosen(group);
+		
+		var basics = dsBarChartBasics();
+	
+		var margin = basics.margin,
+			width = basics.width,
+		   height = basics.height,
+			colorBar = basics.colorBar,
+			barPadding = basics.barPadding
+			;
+		
+		var 	xScale = d3.scale.linear()
+			.domain([0, currentDatasetBarChart.length])
+			.range([0, width])
+			;
+
+		var yScale = d3.scale.linear()
+	      .domain([0, d3.max(currentDatasetBarChart, function(d) { return d.measure; })])
+	      .range([height,0])
+	      ;
+	      
+	   var svg = d3.select("#barChart svg");
+	      
+	   var plot = d3.select("#barChartPlot")
+	   	.datum(currentDatasetBarChart)
+		   ;
+	
+	  		// appending is al gedaan
+	  	plot.selectAll("rect")
+	      .data(currentDatasetBarChart)
+	      .transition()
+			.duration(1000)
+			.attr("x", function(d, i) {
+			    return xScale(i);
+			})
+		   .attr("width", width / currentDatasetBarChart.length - barPadding)   
+			.attr("y", function(d) {
+			    return yScale(d.measure);
+			})  
+			.attr("height", function(d) {
+			    return height-yScale(d.measure);
+			})
+			.attr("fill", colorChosen)
+			;
+		
+		plot.selectAll("text.yAxis") 
+			.data(currentDatasetBarChart)
+			.transition()
+			.duration(750)
+		   .attr("text-anchor", "middle")
+		   .attr("x", function(d, i) {
+		   		return (i * (width / currentDatasetBarChart.length)) + ((width / currentDatasetBarChart.length - barPadding) / 2);
+		   })
+		   .attr("y", function(d) {
+		   		return yScale(d.measure) + 14;
+		   })
+		   .text(function(d) {
+				return formatAsInteger(d3.round(d.measure));
+		   })
+		   .attr("class", "yAxis")					 
+		;
+		
+
+		svg.selectAll("text.title") 
+			.attr("x", (width + margin.left + margin.right)/2)
+			.attr("y", 15)
+			.attr("class","title")				
+			.attr("text-anchor", "middle")
+			.text(group + "'s Quality of Life Index (2016)")
+		;
+}
+/*
+Line Chart
+*/
+var datasetLineChart = [
+{ group: "All", category: 2008, measure: 0 }, 
+{ group: "All", category: 2010, measure: 0 }, 
+{ group: "All", category: 2012, measure: 0 }, 
+{ group: "All", category: 2014, measure: 0 }, 
+{ group: "All", category: 2015, measure: 0 }, 
+{ group: "Japan", category: 2008, measure: 4  }, 
+{ group: "Japan", category: 2010, measure: 5 }, 
+{ group: "Japan", category: 2012, measure: 4.3 }, 
+{ group: "Japan", category: 2014, measure: 3.7 }, 
+{ group: "GB", category: 2008, measure: 5.4 }, 
+{ group: "GB", category: 2010, measure: 7.9 }, 
+{ group: "GB", category: 2012, measure: 8 }, 
+{ group: "GB", category: 2014, measure: 6.3 }, 
+{ group: "France", category: 2008, measure: 7.4 }, 
+{ group: "France", category: 2010, measure: 9.3 }, 
+{ group: "France", category: 2012, measure: 9.9 },
+{ group: "France", category: 2013, measure: 10.4 },
+{ group: "France", category: 2014, measure: 9.9 }, 
+{ group: "USA", category: 2008, measure: 5.9 }, 
+{ group: "USA", category: 2010, measure: 9.7 }, 
+{ group: "USA", category: 2012, measure: 8.2 }, 
+{ group: "USA", category: 2014, measure: 6.2 }, 
+{ group: "Italy", category: 2008, measure: 5.9 }, 
+{ group: "Italy", category: 2010, measure: 8.4 }, 
+{ group: "Italy", category: 2012, measure: 10.7 }, 
+{ group: "Italy", category: 2014, measure: 12.5 }, 
+{ group: "Germany", category: 2008, measure: 7.5 }, 
+{ group: "Germany", category: 2010, measure: 7.1 }, 
+{ group: "Germany", category: 2012, measure: 5.4 }, 
+{ group: "Germany", category: 2014, measure: 5 }, 
+{ group: "Canada", category: 2008, measure: 6.1 }, 
+{ group: "Canada", category: 2010, measure: 8 }, 
+{ group: "Canada", category: 2012, measure: 7.2 }, 
+{ group: "Canada", category: 2014, measure: 6.9 } 
+
+]
+;
+// stel weer default in 
+var group = "All";
+
+function datasetLineChartChosen(group) {
+	var ds = [];
+	for (x in datasetLineChart) {
+		 if(datasetLineChart[x].group==group){
+		 	ds.push(datasetLineChart[x]);
+		 } 
+		}
+	return ds;
+}
+
+function dsLineChartBasics() {
+
+	var margin = {top: 20, right: 10, bottom: 0, left: 50},
+	    width = 500 - margin.left - margin.right,
+	    height = 150 - margin.top - margin.bottom
+	    ;
+		
+		return {
+			margin : margin, 
+			width : width, 
+			height : height
+		}			
+		;
+}
+
+function dsLineChart() {
+
+	var firstDatasetLineChart = datasetLineChartChosen(group);    
+	
+	var basics = dsLineChartBasics();
+	
+	var margin = basics.margin,
+		width = basics.width,
+	   height = basics.height
+		;
+
+	var xScale = d3.scale.linear()
+	    .domain([0, firstDatasetLineChart.length-1])
+	    .range([0, width])
+	    ;
+
+	var yScale = d3.scale.linear()
+	    .domain([0, d3.max(firstDatasetLineChart, function(d) { return d.measure; })])
+	    .range([height, 0])
+	    ;
+	
+	var line = d3.svg.line()
+	   
+	    .x(function(d, i) { return xScale(i); })
+	    .y(function(d) { return yScale(d.measure); })
+	    ;
+	
+	var svg = d3.select("#lineChart").append("svg")
+	    .datum(firstDatasetLineChart)
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	    
+	    
+	var plot = svg
+	    .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+	    .attr("id", "lineChartPlot")
+	    ;
+
+	
+	var dsLength=firstDatasetLineChart.length;
+
+	plot.append("text")
+		.text(firstDatasetLineChart[dsLength-1].measure)
+		.attr("id","lineChartTitle2")
+		.attr("x",width/2)
+		.attr("y",height/2)	
+		;
+
+	    
+	plot.append("path")
+	    .attr("class", "line")
+	    .attr("d", line)	
+	    .attr("stroke", "lightgrey")
+	    ;
+	  
+	plot.selectAll(".dot")
+	    .data(firstDatasetLineChart)
+	  	 .enter().append("circle")
+	    .attr("class", "dot")
+	    .attr("fill", function (d) { return d.measure==d3.min(firstDatasetLineChart, function(d) { return d.measure; }) ? "red" : (d.measure==d3.max(firstDatasetLineChart, function(d) { return d.measure; }) ? "green" : "white") } )
+	    .attr("cx", line.x())
+	    .attr("cy", line.y())
+	    .attr("r", 3.5)
+	    .attr("stroke", "lightgrey")
+	    .append("title")
+	    .text(function(d) { return d.category + ": " + formatAsInteger(d.measure); })
+	    ;
+
+	svg.append("text")
+		.text("Unemployment Rate 2015")
+		.attr("id","lineChartTitle1")	
+		.attr("x",margin.left + ((width + margin.right)/2))
+		.attr("y", 10)
+		;
+
+}
+// alle waardes zijn 0 dus hij laat geen lijn zien maar wel alvast maken voor de update functie
+dsLineChart();
+
+
+function updateLineChart(group, colorChosen) {
+
+	var currentDatasetLineChart = datasetLineChartChosen(group);   
+
+	var basics = dsLineChartBasics();
+	
+	var margin = basics.margin,
+		width = basics.width,
+	   height = basics.height
+		;
+
+	var xScale = d3.scale.linear()
+	    .domain([0, currentDatasetLineChart.length-1])
+	    .range([0, width])
+	    ;
+
+	var yScale = d3.scale.linear()
+	    .domain([0, d3.max(currentDatasetLineChart, function(d) { return d.measure; })])
+	    .range([height, 0])
+	    ;
+	
+	var line = d3.svg.line()
+    .x(function(d, i) { return xScale(i); })
+    .y(function(d) { return yScale(d.measure); })
+    ;
+
+   var plot = d3.select("#lineChartPlot")
+   	.datum(currentDatasetLineChart)
+	   ;
+	   
+
+	var dsLength=currentDatasetLineChart.length;
+	
+	plot.select("text")
+		.text(currentDatasetLineChart[dsLength-1].measure)
+		;
+
+	   
+	plot
+	.select("path")
+		.transition()
+		.duration(750)			    
+	   .attr("class", "line")
+	   .attr("d", line)	
+	  
+		.attr("stroke", colorChosen) // kleur van color functie
+	   ;
+	   
+	var path = plot
+		.selectAll(".dot")
+	   .data(currentDatasetLineChart)
+	   .transition()
+		.duration(750)
+	   .attr("class", "dot")
+	   .attr("fill", function (d) { return d.measure==d3.min(currentDatasetLineChart, function(d) { return d.measure; }) ? "red" : (d.measure==d3.max(currentDatasetLineChart, function(d) { return d.measure; }) ? "green" : "white") } )
+	   .attr("cx", line.x())
+	   .attr("cy", line.y())
+	   .attr("r", 3.5)
+	  
+		.attr("stroke", colorChosen)
+	   ;
+	   
+	   path
+	   .selectAll("title")
+	   .text(function(d) { return d.category + ": " + formatAsInteger(d.measure); })	 
+	   ;  
+
+}
+</script>
+
+<div style="position: relative">
+                <p style="position: fixed; bottom: 0; width:100%; text-align: center"> Sources: World Bank Open Data and Numbeo (2016)
+                </p>
+            </div>
+
+</body>
+</html>
