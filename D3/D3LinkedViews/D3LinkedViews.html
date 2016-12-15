@@ -16,7 +16,6 @@
 	<div id="pieChart"></div>
 	<div id="barChart"></div>  
 	<div id="lineChart"></div>
-
 <h2>Quality of Life Index per Country 2016 Mid Year </h2>
 <script>
     // render wereldkaart
@@ -86,8 +85,7 @@
                 SGP:{fillKey: '80 - 109', qol:88.86},
                 HGK:{fillKey: '80 - 109', qol:104.02},
                 BIH:{fillKey: '140 - 170', qol:142.52},
-        },
-        
+        }, 
         geographyConfig: {
             borderColor: '#DEDEDE',
             highlightBorderWidth: 2,
@@ -108,8 +106,7 @@
                     '</div>'].join('');
             }
         },
-  
-done: function(datamap) {
+  done: function(datamap) {
     datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
         console.log(d3.event.pageY)
         var tekst = $("#map-tekst");      
@@ -121,12 +118,9 @@ done: function(datamap) {
     console.log(geography.properties.name);
     });
 }
-
-
 });
 // plugin voegt legenda toe aan map
 QoL.legend();
-
 </script>
 <div id="description" style="position: absolute; top: 695px; width: 1000px; height: 100px; font-size: small; font-family: Helvetica;">
     <h2>Taking a Closer Look at the G7 Better Life Index</h2> My intention was to first make an interactive map of the world displaying data
@@ -159,7 +153,6 @@ function dsPieChart(){
 	      {category: "Canada", measure: 0.054}
 	      ]
 	      ;
-
 	var 	width = 400,
 		   height = 400,
 		   outerRadius = Math.min(width, height) / 2,
@@ -168,8 +161,7 @@ function dsPieChart(){
 		   innerRadiusFinal = outerRadius * .5,
 		   innerRadiusFinal3 = outerRadius* .45,
 		   color = d3.scale.category20c()    //d3 kleuren pallet gebruiken
-		   ;
-	    
+		   ; 
 	var vis = d3.select("#pieChart")
 	     .append("svg:svg")              //svg maken in body
 	     .data([dataset])                   // link data eraan
@@ -177,8 +169,7 @@ function dsPieChart(){
 	         .attr("height", height)
 	     		.append("svg:g")                
 	         .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")    //midden van chart wordt radius
-				;
-				
+			;			
    var arc = d3.svg.arc()              
         	.outerRadius(outerRadius).innerRadius(innerRadius);
    
@@ -197,8 +188,7 @@ function dsPieChart(){
                .on("mouseover", mouseover)
     				.on("mouseout", mouseout)
     				.on("click", up)
-    				;
-    				
+    				;			
         arcs.append("svg:path")
                .attr("fill", function(d, i) { return color(i); } ) // stel kleur van arcs is door color functie
                .attr("d", arc)     // hier worden de slices gemaakt
@@ -210,7 +200,6 @@ function dsPieChart(){
 			    .delay(10)
 			    .attr("d", arcFinal )
 			    ;
-	
 	  /// label toevoegen en draaien
 	  // source: http://bl.ocks.org/1305337#index.html
 	  arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
@@ -240,23 +229,21 @@ function dsPieChart(){
 	  d3.select(this).select("path").transition()
 	      .duration(750)
 	        		
-	        		.attr("d", arcFinal3)
-	        		;
+	       .attr("d", arcFinal3)
+	       ;
 	}
 	
 	function mouseout() {
 	  d3.select(this).select("path").transition()
 	      .duration(750)
 	        	
-	        		.attr("d", arcFinal)
-	        		;
+	       .attr("d", arcFinal)
+	       ;
 	}
 	
 	function up(d, i) {
-	
-				updateBarChart(d.data.category, color(i));
-				updateLineChart(d.data.category, color(i));
-			 
+	updateBarChart(d.data.category, color(i));
+	updateLineChart(d.data.category, color(i));
 	}
 }
 
@@ -312,7 +299,6 @@ var datasetBarChart = [
 
 // stel eerste bar chart in 'default' op 0 
 var group = "All";
-
 function datasetBarChosen(group) {
 	var ds = [];
 	for (x in datasetBarChart) {
@@ -322,8 +308,6 @@ function datasetBarChosen(group) {
 		}
 	return ds;
 }
-
-
 function dsBarChartBasics() {
 
 		var margin = {top: 100, right: 5, bottom: 20, left: 50},
@@ -342,7 +326,6 @@ function dsBarChartBasics() {
 		}			
 		;
 }
-
 function dsBarChart() {
 
 	var firstDatasetBarChart = datasetBarChosen(group);         	
@@ -357,31 +340,27 @@ function dsBarChart() {
 		;
 					
 	var 	xScale = d3.scale.linear()
-						.domain([0, firstDatasetBarChart.length])
-						.range([0, width])
-						;
-						
+		.domain([0, firstDatasetBarChart.length])
+		.range([0, width])
+						;						
 // linear y scale: past zich op de data aan  
 	var yScale = d3.scale.linear()
 			// max waarde in dataset om de y scale te bepalen
 		   .domain([0, d3.max(firstDatasetBarChart, function(d) { return d.measure; })])
 		  
 		   .range([height, 0])
-		   ;
-	
+		   ;	
 //svg element maken
-	
 	var svg = d3.select("#barChart")
 			.append("svg")
 		    .attr("width", width + margin.left + margin.right)
 		    .attr("height", height + margin.top + margin.bottom)
 		    .attr("id","barChartPlot")
 		    ;
-	
 	var plot = svg
-		    .append("g")
-		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-		    ;
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		;
 	            
 	plot.selectAll("rect")
 		   .data(firstDatasetBarChart)
@@ -399,10 +378,7 @@ function dsBarChart() {
 			})
 			.attr("fill", "lightgrey")
 			;
-	
-		
 // voeg labels toe onder de bars	
-	
 	plot.selectAll("text")
 	.data(firstDatasetBarChart)
 	.enter()
@@ -420,8 +396,6 @@ function dsBarChart() {
 	})
 	.attr("class", "yAxis")
 	;
-	
-		
 	
 	var xLabels = svg
 		    .append("g")
@@ -451,9 +425,7 @@ function dsBarChart() {
 		.attr("text-anchor", "middle")
 		.text("Overall Quality of Life Index (2016)")
 		;
-}
-
-dsBarChart();
+}dsBarChart();
 
  /* ** UPDATE CHART ** */
 
@@ -598,7 +570,6 @@ function dsLineChartBasics() {
 		}			
 		;
 }
-
 function dsLineChart() {
 
 	var firstDatasetLineChart = datasetLineChartChosen(group);    
